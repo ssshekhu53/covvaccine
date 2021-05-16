@@ -1,15 +1,47 @@
 import React, { Component } from 'react';
 // import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
-import { Dropdown, Container, Form, Accordion, Icon } from 'semantic-ui-react';
+import { Dropdown, Container, Form, Accordion, Icon, } from 'semantic-ui-react';
 import axios from 'axios';
 import moment from 'moment';
 
-const level1Panels = [
-    { key: 'panel-1a', title: 'Level 1A', content: 'Level 1A Contents' },
-  ]
-
-
 const day1Panels = props => (
+    props.centers.map((ele, index) => {
+        if(typeof ele.sessions[0] !== 'undefined' && ele.sessions[0].date == moment().add(0, "days").format('DD-MM-YYYY'))
+            return Object({
+                key: `panel-1-${index}`, 
+                title: ele.name,
+                content: ele.sessions[0].date
+            })
+        }
+    )
+);
+
+const day1Content = props => (
+    <div>
+        <Accordion.Accordion panels={day1Panels(props)} />
+    </div>
+)
+
+
+const day2Panels = props => (
+    props.centers.map((ele, index) => { 
+        if(typeof ele.sessions[1] !== 'undefined' && ele.sessions[1].date == moment().add(1, "days").format('DD-MM-YYYY'))
+            return Object({
+                key: `panel-1-${index}`, 
+                title: ele.name,
+                content: ele.sessions[1].date
+            })
+    })
+);
+
+const day2Content = props => (
+    <div>
+        <Accordion.Accordion panels={day2Panels(props)} />
+    </div>
+)
+
+
+const day3Panels = props => (
     props.centers.map((ele, index) => Object({
         key: `panel-1-${index}`, 
         title: ele.name,
@@ -17,12 +49,72 @@ const day1Panels = props => (
     }))
 );
 
-
-const Day1Content = props => (
+const day3Content = props => (
     <div>
         <Accordion.Accordion panels={day1Panels(props)} />
     </div>
 )
+
+
+const day4Panels = props => (
+    props.centers.map((ele, index) => Object({
+        key: `panel-1-${index}`, 
+        title: ele.name,
+        content: ele.address
+    }))
+);
+
+const day4Content = props => (
+    <div>
+        <Accordion.Accordion panels={day1Panels(props)} />
+    </div>
+)
+
+
+const day5Panels = props => (
+    props.centers.map((ele, index) => Object({
+        key: `panel-1-${index}`, 
+        title: ele.name,
+        content: ele.address
+    }))
+);
+
+const day5Content = props => (
+    <div>
+        <Accordion.Accordion panels={day1Panels(props)} />
+    </div>
+)
+
+
+const day6Panels = props => (
+    props.centers.map((ele, index) => Object({
+        key: `panel-1-${index}`, 
+        title: ele.name,
+        content: ele.address
+    }))
+);
+
+const day6Content = props => (
+    <div>
+        <Accordion.Accordion panels={day1Panels(props)} />
+    </div>
+)
+
+
+const day7Panels = props => (
+    props.centers.map((ele, index) => Object({
+        key: `panel-1-${index}`, 
+        title: ele.name,
+        content: ele.address
+    }))
+);
+
+const day7Content = props => (
+    <div>
+        <Accordion.Accordion panels={day1Panels(props)} />
+    </div>
+)
+
 
 const rootPanels = props => {
     let panel = [];
@@ -31,10 +123,13 @@ const rootPanels = props => {
         panel.push(Object({
             key: `panel-${i}`,
             title: moment().add(i, 'days').format('DD-MM-YYYY'),
-            content: { content: Day1Content(props) }
+            content: { content: funContents[i](props) }
         }));
     return panel;
 } 
+
+const funPanels = [ day1Panels, day2Panels, day3Panels, day4Panels, day5Panels, day6Panels, day7Panels,];
+const funContents = [ day1Content, day2Content, day3Content, day4Content, day5Content, day6Content, day7Content,];
 
 class Homepage extends Component {
 
@@ -118,7 +213,7 @@ class Homepage extends Component {
                     </Form.Group>
                 </Form>
                 <Container>
-                    { this.state.slots.length !== 0 ? (<Accordion panels={rootPanels(this.state.slots)} styled />):'' }
+                    { this.state.slots.length !== 0 ? (<Accordion panels={rootPanels(this.state.slots)} styled />): '' }
                 </Container>
             </Container>
         );
