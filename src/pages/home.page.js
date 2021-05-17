@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 // import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
-import { Dropdown, Container, Form, Button, Message } from 'semantic-ui-react';
+import { Dropdown, Container, Form, Button, Message, Card } from 'semantic-ui-react';
 import DatePicker from "react-datepicker";
 import axios from 'axios';
 import moment from 'moment';
@@ -25,6 +25,7 @@ class Homepage extends Component {
             today: new Date(),
             isSubmitting: false,
             formError: false,
+            cardItem: [],
         };
     }
 
@@ -93,10 +94,25 @@ class Homepage extends Component {
             });
             axios.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id=${this.state.district_id}&date=${moment(this.state.date).format('DD-MM-YYYY')}`)
             .then(response => {
-                console.log(response.data);
+                // console.log(response.data);
                 this.setState({
-                    isSubmitting: false
+                    isSubmitting: false,
+                    slots: response.data.sessions,
                 });
+                let cardItem = this.state.slots.map((ele, index) => {
+                    return Object({
+                        'header': ele.name,
+                        'description': [`Age Limit: ${ele.min_age_limit}+`, `Vaccine: ${ele.vaccine}`].join('\n'),
+                        'meta': ele.address,
+                        'color': 'red'
+                    })
+                })
+
+                this.setState({
+                    cardItem: cardItem
+                });
+
+                console.log(this.state.cardItem);
             })
             .catch(err => {
                 console.log(err);
@@ -110,50 +126,56 @@ class Homepage extends Component {
     render()
     {
         return(
-            <Container>
-                <Form loading={this.state.isSubmitting} error={this.state.formError} onSubmit={this.onSubmit}>
-                    { this.state.formError === true?
-                        <Message
-                            error
-                            header='Action Forbidden'
-                            content='Please fill all the fields.'
-                        />:''
-                    }
-                    <Form.Group widths='equal'>
-                        <Form.Field required>
-                            <Dropdown
-                                placeholder='Select State'
-                                fluid
-                                selection
-                                options={this.state.stateOption}
-                                onChange={this.onChangeState}
-                                className=""
-                                error={this.state.formError && this.state.state_id === null ? true: false}
-                            />
-                        </Form.Field>
-                        <Form.Field required>
-                            <Dropdown
-                                placeholder='Select District'
-                                fluid
-                                selection
-                                options={this.state.districtOption}
-                                onChange={this.onChangeDistrict}
-                                className=""
-                                error={this.state.formError && this.state.district_id === null ? true: false}
-                            />
-                        </Form.Field>
-                        <Form.Field required>
-                            <div className="customDatePickerWidth">
-                            <DatePicker selected={this.state.today} onChange={this.onChangeDate} widths="full" className="" />
-                            </div>
-                        </Form.Field>
-                    </Form.Group>
-                    <Button primary type="submit" className="w-100">Search Slots</Button>
-                </Form>
+            <div>
                 <Container>
-                    {/* { this.state.slots.length !== 0 ? (<Accordion panels={rootPanels(this.state.slots)} styled />): '' } */}
+                    <Form loading={this.state.isSubmitting} error={this.state.formError} onSubmit={this.onSubmit}>
+                        { this.state.formError === true?
+                            <Message
+                                error
+                                header='Action Forbidden'
+                                content='Please fill all the fields.'
+                            />:''
+                        }
+                        <Form.Group widths='equal'>
+                            <Form.Field required>
+                                <label>Select State</label>
+                                <Dropdown
+                                    placeholder='Select State'
+                                    fluid
+                                    selection
+                                    options={this.state.stateOption}
+                                    onChange={this.onChangeState}
+                                    className=""
+                                    error={this.state.formError && this.state.state_id === null ? true: false}
+                                />
+                            </Form.Field>
+                            <Form.Field required>
+                                <label>Select District</label>
+                                <Dropdown
+                                    placeholder='Select District'
+                                    fluid
+                                    selection
+                                    options={this.state.districtOption}
+                                    onChange={this.onChangeDistrict}
+                                    className=""
+                                    error={this.state.formError && this.state.district_id === null ? true: false}
+                                />
+                            </Form.Field>
+                            <Form.Field required>
+                                <label>Select District</label>
+                                <div className="customDatePickerWidth">
+                                    <DatePicker selected={this.state.today} minDate={this.state.today} onChange={this.onChangeDate} className="" />
+                                </div>
+                            </Form.Field>
+                        </Form.Group>
+                        <Button primary type="submit" className="w-100">Search Slots</Button>
+                    </Form>
                 </Container>
-            </Container>
+                <Container className="py-3">
+                    {/* { this.state.slots.length !== 0 ? (<Accordion panels={rootPanels(this.state.slots)} styled />): '' } */}
+                    { this.state.cardItem.length !== 0 ? (<Card.Group centered items={this.state.cardItem} />): '' }
+                </Container>
+            </div>
         );
     }
 }
