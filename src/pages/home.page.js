@@ -15,6 +15,7 @@ class Homepage extends Component {
         this.onChangeDistrict = this.onChangeDistrict.bind(this);
         this.onChangeDate = this.onChangeDate.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+        this.showCards = this.showCards.bind(this);
 
         this.state = {
             stateOption: [],
@@ -26,6 +27,7 @@ class Homepage extends Component {
             isSubmitting: false,
             formError: false,
             cardItem: [],
+            flag: false,
         };
     }
 
@@ -49,7 +51,8 @@ class Homepage extends Component {
         axios.get(`https://cdn-api.co-vin.in/api/v2/admin/location/districts/${data.value}`)
         .then(response => {
             this.setState({
-                state_id: data.value
+                state_id: data.value,
+                flag: false
             });
             let districtOption = response.data.districts.map(elem => Object({key: elem.district_id, text: elem.district_name, value: elem.district_id}));
             this.setState({
@@ -64,20 +67,23 @@ class Homepage extends Component {
     onChangeDistrict(e, data) {
         // console.log(data.value);
         this.setState({
-            district_id: data.value
+            district_id: data.value,
+            flag: false
         });
     }
 
     onChangeDate(date) {
         this.setState({
-            today: date
+            today: date,
+            flag: false
         });
     }
 
     onSubmit(e) {
         e.preventDefault(); 
         this.setState({
-            isSubmitting: true
+            isSubmitting: true,
+            flag: false
         });
         if(this.state.state_id === null || this.state.district_id === null)
         {
@@ -98,6 +104,7 @@ class Homepage extends Component {
                 this.setState({
                     isSubmitting: false,
                     slots: response.data.sessions,
+                    flag: true
                 });
                 let cardItem = this.state.slots.map((ele, index) => {
                     return Object({
@@ -121,6 +128,28 @@ class Homepage extends Component {
                 });
             });
         }
+    }
+
+    showCards() {
+        this.state.slots.forEach((ele, index)=>{
+            <Card color="red">
+                <Card.Content>
+                    <Card.Header>${ele.name}</Card.Header>
+                    <Card.Meta>
+                        <span className='date'>${ele.address}</span>
+                    </Card.Meta>
+                    <Card.Description>
+                    {[`Age Limit: ${ele.min_age_limit}+`, `Vaccine: ${ele.vaccine}`].join('<br/>')}
+                    </Card.Description>
+                </Card.Content>
+                <Card.Content extra>
+                    <a>
+            
+                        22 Friends
+                    </a>
+                </Card.Content>
+            </Card>
+        })
     }
 
     render()
@@ -173,7 +202,13 @@ class Homepage extends Component {
                 </Container>
                 <Container className="py-3">
                     {/* { this.state.slots.length !== 0 ? (<Accordion panels={rootPanels(this.state.slots)} styled />): '' } */}
-                    { this.state.cardItem.length !== 0 ? (<Card.Group centered />): '' }
+                    { this.state.cardItem.length !== 0 ? 
+                        (<Card.Group centered items={this.state.cardItem} />): this.state.flag == true?
+                            <Message
+                                warning
+                                header='No slots available'
+                                content='Please come back after some time.'
+                            />:'' }
                 </Container>
             </div>
         );
