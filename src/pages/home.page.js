@@ -1,135 +1,10 @@
 import React, { Component } from 'react';
 // import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
-import { Dropdown, Container, Form, Accordion, Icon, } from 'semantic-ui-react';
+import { Dropdown, Container, Form, Button, Message } from 'semantic-ui-react';
+import DatePicker from "react-datepicker";
 import axios from 'axios';
 import moment from 'moment';
-
-const day1Panels = props => (
-    props.centers.map((ele, index) => {
-        if(typeof ele.sessions[0] !== 'undefined' && ele.sessions[0].date == moment().add(0, "days").format('DD-MM-YYYY'))
-            return Object({
-                key: `panel-1-${index}`, 
-                title: ele.name,
-                content: ele.sessions[0].date
-            })
-        }
-    )
-);
-
-const day1Content = props => (
-    <div>
-        <Accordion.Accordion panels={day1Panels(props)} />
-    </div>
-)
-
-
-const day2Panels = props => (
-    props.centers.map((ele, index) => { 
-        if(typeof ele.sessions[1] !== 'undefined' && ele.sessions[1].date == moment().add(1, "days").format('DD-MM-YYYY'))
-            return Object({
-                key: `panel-1-${index}`, 
-                title: ele.name,
-                content: ele.sessions[1].date
-            })
-    })
-);
-
-const day2Content = props => (
-    <div>
-        <Accordion.Accordion panels={day2Panels(props)} />
-    </div>
-)
-
-
-const day3Panels = props => (
-    props.centers.map((ele, index) => Object({
-        key: `panel-1-${index}`, 
-        title: ele.name,
-        content: ele.address
-    }))
-);
-
-const day3Content = props => (
-    <div>
-        <Accordion.Accordion panels={day1Panels(props)} />
-    </div>
-)
-
-
-const day4Panels = props => (
-    props.centers.map((ele, index) => Object({
-        key: `panel-1-${index}`, 
-        title: ele.name,
-        content: ele.address
-    }))
-);
-
-const day4Content = props => (
-    <div>
-        <Accordion.Accordion panels={day1Panels(props)} />
-    </div>
-)
-
-
-const day5Panels = props => (
-    props.centers.map((ele, index) => Object({
-        key: `panel-1-${index}`, 
-        title: ele.name,
-        content: ele.address
-    }))
-);
-
-const day5Content = props => (
-    <div>
-        <Accordion.Accordion panels={day1Panels(props)} />
-    </div>
-)
-
-
-const day6Panels = props => (
-    props.centers.map((ele, index) => Object({
-        key: `panel-1-${index}`, 
-        title: ele.name,
-        content: ele.address
-    }))
-);
-
-const day6Content = props => (
-    <div>
-        <Accordion.Accordion panels={day1Panels(props)} />
-    </div>
-)
-
-
-const day7Panels = props => (
-    props.centers.map((ele, index) => Object({
-        key: `panel-1-${index}`, 
-        title: ele.name,
-        content: ele.address
-    }))
-);
-
-const day7Content = props => (
-    <div>
-        <Accordion.Accordion panels={day1Panels(props)} />
-    </div>
-)
-
-
-const rootPanels = props => {
-    let panel = [];
-    let i = -1;
-    while(++i<7)
-        panel.push(Object({
-            key: `panel-${i}`,
-            title: moment().add(i, 'days').format('DD-MM-YYYY'),
-            content: { content: funContents[i](props) }
-        }));
-    return panel;
-} 
-
-const funPanels = [ day1Panels, day2Panels, day3Panels, day4Panels, day5Panels, day6Panels, day7Panels,];
-const funContents = [ day1Content, day2Content, day3Content, day4Content, day5Content, day6Content, day7Content,];
+import '../App.css';
 
 class Homepage extends Component {
 
@@ -138,15 +13,24 @@ class Homepage extends Component {
 
         this.onChangeState = this.onChangeState.bind(this);
         this.onChangeDistrict = this.onChangeDistrict.bind(this);
+        this.onChangeDate = this.onChangeDate.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
 
         this.state = {
             stateOption: [],
             districtOption: [],
-            slots: []
+            state_id: null,
+            district_id: null,
+            slots: [],
+            today: new Date(),
+            isSubmitting: false,
+            formError: false,
         };
     }
 
     componentDidMount() {
+        document.title = "Search By District | Covvaccine";
+
         axios.get('https://cdn-api.co-vin.in/api/v2/admin/location/states')
         .then(response => {
             let stateOption = response.data.states.map(elem => Object({key: elem.state_id, text: elem.state_name, value: elem.state_id}));
@@ -163,6 +47,9 @@ class Homepage extends Component {
         // console.log(data.value);
         axios.get(`https://cdn-api.co-vin.in/api/v2/admin/location/districts/${data.value}`)
         .then(response => {
+            this.setState({
+                state_id: data.value
+            });
             let districtOption = response.data.districts.map(elem => Object({key: elem.district_id, text: elem.district_name, value: elem.district_id}));
             this.setState({
                 districtOption: districtOption
@@ -175,45 +62,96 @@ class Homepage extends Component {
 
     onChangeDistrict(e, data) {
         // console.log(data.value);
-        let date = moment().format('DD-MM-YYYY');
-        axios.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=${data.value}&date=${date}`)
-        .then(response => {
-            console.log(response.data);
-            this.setState({
-                slots: response.data
-            })
-        })
-        .catch(err => {
-            console.log(err);
+        this.setState({
+            district_id: data.value
         });
+    }
+
+    onChangeDate(date) {
+        this.setState({
+            today: date
+        });
+    }
+
+    onSubmit(e) {
+        e.preventDefault(); 
+        this.setState({
+            isSubmitting: true
+        });
+        if(this.state.state_id === null || this.state.district_id === null)
+        {
+            this.setState({
+                formError: true,
+            });
+            this.setState({
+                isSubmitting: false
+            });
+        }
+        else{
+            this.setState({
+                formError: false,
+            });
+            axios.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id=${this.state.district_id}&date=${moment(this.state.date).format('DD-MM-YYYY')}`)
+            .then(response => {
+                console.log(response.data);
+                this.setState({
+                    isSubmitting: false
+                });
+            })
+            .catch(err => {
+                console.log(err);
+                this.setState({
+                    isSubmitting: false
+                });
+            });
+        }
     }
 
     render()
     {
         return(
             <Container>
-                <Form>
-                    <Form.Group widths={2}>
-                        <Dropdown
-                            placeholder='Select State'
-                            fluid
-                            selection
-                            options={this.state.stateOption}
-                            onChange={this.onChangeState}
-                            className="mx-2"
-                        />
-                        <Dropdown
-                            placeholder='Select District'
-                            fluid
-                            selection
-                            options={this.state.districtOption}
-                            onChange={this.onChangeDistrict}
-                            className="mx-2"
-                        />
+                <Form loading={this.state.isSubmitting} error={this.state.formError} onSubmit={this.onSubmit}>
+                    { this.state.formError === true?
+                        <Message
+                            error
+                            header='Action Forbidden'
+                            content='Please fill all the fields.'
+                        />:''
+                    }
+                    <Form.Group widths='equal'>
+                        <Form.Field required>
+                            <Dropdown
+                                placeholder='Select State'
+                                fluid
+                                selection
+                                options={this.state.stateOption}
+                                onChange={this.onChangeState}
+                                className=""
+                                error={this.state.formError && this.state.state_id === null ? true: false}
+                            />
+                        </Form.Field>
+                        <Form.Field required>
+                            <Dropdown
+                                placeholder='Select District'
+                                fluid
+                                selection
+                                options={this.state.districtOption}
+                                onChange={this.onChangeDistrict}
+                                className=""
+                                error={this.state.formError && this.state.district_id === null ? true: false}
+                            />
+                        </Form.Field>
+                        <Form.Field required>
+                            <div className="customDatePickerWidth">
+                            <DatePicker selected={this.state.today} onChange={this.onChangeDate} widths="full" className="" />
+                            </div>
+                        </Form.Field>
                     </Form.Group>
+                    <Button primary type="submit" className="w-100">Search Slots</Button>
                 </Form>
                 <Container>
-                    { this.state.slots.length !== 0 ? (<Accordion panels={rootPanels(this.state.slots)} styled />): '' }
+                    {/* { this.state.slots.length !== 0 ? (<Accordion panels={rootPanels(this.state.slots)} styled />): '' } */}
                 </Container>
             </Container>
         );
