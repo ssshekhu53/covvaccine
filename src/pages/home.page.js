@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 // import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
-import { Dropdown, Container, Form, Button, Message, Card } from 'semantic-ui-react';
+import { Dropdown, Container, Form, Button, Message, Card, CardDescription } from 'semantic-ui-react';
 import DatePicker from "react-datepicker";
 import axios from 'axios';
 import moment from 'moment';
@@ -131,25 +131,28 @@ class Homepage extends Component {
     }
 
     showCards() {
+        let cards = [];
         this.state.slots.forEach((ele, index)=>{
-            <Card color="red">
+            cards.push(
+            <Card color="violet">
                 <Card.Content>
-                    <Card.Header>${ele.name}</Card.Header>
+                    <Card.Header>{ele.name}</Card.Header>
                     <Card.Meta>
-                        <span className='date'>${ele.address}</span>
+                        <span className='date'>{ele.address}, {ele.pincode}</span>
                     </Card.Meta>
                     <Card.Description>
-                    {[`Age Limit: ${ele.min_age_limit}+`, `Vaccine: ${ele.vaccine}`].join('<br/>')}
                     </Card.Description>
                 </Card.Content>
                 <Card.Content extra>
-                    <a>
-            
-                        22 Friends
-                    </a>
+                    <div className='ui three buttons'>
+                        <Button basic color="red">{ele.min_age_limit}+</Button>
+                        <Button basic color="green">{ele.vaccine}</Button>
+                        <Button basic color="blue"><span>{ele.fee_type}</span></Button>
+                    </div>
                 </Card.Content>
-            </Card>
+            </Card>);
         })
+        return cards;
     }
 
     render()
@@ -203,7 +206,9 @@ class Homepage extends Component {
                 <Container className="py-3">
                     {/* { this.state.slots.length !== 0 ? (<Accordion panels={rootPanels(this.state.slots)} styled />): '' } */}
                     { this.state.cardItem.length !== 0 ? 
-                        (<Card.Group centered items={this.state.cardItem} />): this.state.flag == true?
+                        (<Card.Group centered>
+                            {this.showCards()}
+                        </Card.Group>): this.state.flag == true?
                             <Message
                                 warning
                                 header='No slots available'
