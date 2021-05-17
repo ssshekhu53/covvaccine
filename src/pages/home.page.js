@@ -30,7 +30,7 @@ class Homepage extends Component {
     }
 
     componentDidMount() {
-        document.title = "Search By District | Covvaccine";
+        document.title = "Search By District | Covvaxine";
 
         axios.get('https://cdn-api.co-vin.in/api/v2/admin/location/states')
         .then(response => {
@@ -173,7 +173,7 @@ class Homepage extends Component {
                 </Container>
                 <Container className="py-3">
                     {/* { this.state.slots.length !== 0 ? (<Accordion panels={rootPanels(this.state.slots)} styled />): '' } */}
-                    { this.state.cardItem.length !== 0 ? (<Card.Group centered items={this.state.cardItem} />): '' }
+                    { this.state.cardItem.length !== 0 ? (<Card.Group centered />): '' }
                 </Container>
             </div>
         );
