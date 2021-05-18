@@ -20,8 +20,8 @@ class TopNavigation extends Component {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
-                        <Nav.Link href="/" >Home</Nav.Link>
-                        <Nav.Link href="/pincode-search" >Pincode</Nav.Link>
+                        <Nav.Link href="/" >District Search</Nav.Link>
+                        <Nav.Link href="/pincode-search" >Pincode Search</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>
