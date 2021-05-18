@@ -4,7 +4,7 @@ import Homepage from "./pages/home.page";
 
 function App() {
   return (
-	<div className="bg-light" style={{height: "100vh"}}>
+	<div className="bg-light" style={{minHeight: "100vh"}}>
 		<Router>
 			<TopNavigation />
 			<br/>

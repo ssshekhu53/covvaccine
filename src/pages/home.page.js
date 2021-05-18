@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { ListGroup, Badge } from 'react-bootstrap';
-import { Dropdown, Container, Form, Button, Message, Card } from 'semantic-ui-react';
+import { Tabs, Tab, Badge } from 'react-bootstrap';
+import { Dropdown, Container, Form, Button, Message } from 'semantic-ui-react';
 import DatePicker from "react-datepicker";
 import axios from 'axios';
 import moment from 'moment';
 import '../App.css';
+import Slots from '../components/slots.componts';
 
 class Homepage extends Component {
 
@@ -15,7 +16,7 @@ class Homepage extends Component {
         this.onChangeDistrict = this.onChangeDistrict.bind(this);
         this.onChangeDate = this.onChangeDate.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
-        this.showCards = this.showCards.bind(this);
+        // this.showCards = this.showCards.bind(this);
 
         this.state = {
             stateOption: [],
@@ -27,7 +28,9 @@ class Homepage extends Component {
             startDate: new Date(),
             isSubmitting: false,
             formError: false,
-            cardItem: [],
+            cardItemAll: [],
+            cardItem18: [],
+            cardItem45: [],
             flag: false,
         };
     }
@@ -107,10 +110,21 @@ class Homepage extends Component {
                     slots: response.data.sessions,
                     flag: true
                 });
-                let cardItem = this.state.slots;
+                let cardItemAll = this.state.slots;
+                let cardItem18 = this.state.slotes.map((item, index) => {
+                    if(item.min_age_limit===18)
+                        return item;
+                });
+
+                let cardItem45 = this.state.slotes.map((item, index) => {
+                    if(item.min_age_limit===45)
+                        return item;
+                });
 
                 this.setState({
-                    cardItem: cardItem
+                    cardItemAll: cardItemAll,
+                    cardItem18: cardItem18,
+                    cardItem45: cardItem45,
                 });
             })
             .catch(err => {
@@ -120,44 +134,6 @@ class Homepage extends Component {
                 });
             });
         }
-    }
-
-    showCards() {
-        let cards = [];
-        this.state.cardItem.forEach((ele, index) => {
-            let timeSlots = [];
-            ele.slots.forEach((item, index) => {
-                timeSlots.push(<ListGroup.Item key={index} variant={index%2===0?'warning':'light'} className="text-center font-weight-bold">{item}</ListGroup.Item>);
-            });
-            cards.push(
-            <Card color="violet" key={index}>
-                <Card.Content>
-                    <Card.Header>{ele.name}</Card.Header>
-                    <Card.Meta>
-                        <span className='date'>
-                            {ele.address}, {ele.pincode} <br/> 
-                            <Badge variant="info">Dose 1 : {ele.available_capacity_dose1} Doses</Badge>
-                            <Badge variant="info">Dose 2 : {ele.available_capacity_dose2} Doses</Badge>
-                            <Badge variant="info">Total : {ele.available_capacity} Doses</Badge>
-                        </span>
-                    </Card.Meta>
-                    <hr/>
-                    <Card.Description>
-                        <ListGroup>
-                            {timeSlots}
-                        </ListGroup>
-                    </Card.Description>
-                </Card.Content>
-                <Card.Content extra className="d-flex justify-content-center">
-                    <ListGroup horizontal>
-                        <ListGroup.Item className="text-danger border-danger">{ele.min_age_limit}+</ListGroup.Item>
-                        <ListGroup.Item className="text-success border-success">{ele.vaccine}</ListGroup.Item>
-                        <ListGroup.Item className="text-primary border-primary">{ele.fee_type}</ListGroup.Item>
-                    </ListGroup>
-                </Card.Content>
-            </Card>);
-        })
-        return cards;
     }
 
     render()
@@ -208,18 +184,51 @@ class Homepage extends Component {
                         <Button primary type="submit" className="w-100">Search Slots</Button>
                     </Form>
                 </Container>
-                <div className="container-fluid py-3">
-                    {/* { this.state.slots.length !== 0 ? (<Accordion panels={rootPanels(this.state.slots)} styled />): '' } */}
-                    { this.state.cardItem.length !== 0 ? 
-                        (<Card.Group centered>
-                            {this.showCards()}
-                        </Card.Group>): this.state.flag == true?
-                            <Message
-                                warning
-                                header='No slots available'
-                                content='Please come back after some time.'
-                            />:'' }
-                </div>
+                <hr/>
+                { this.state.cardItemAll.length !== 0 ?
+                    <div className="container my-3 border border-2 border-secondary"> 
+                        <Tabs defaultActiveKey="all" className="d-flex justify-content-center font-weight-bold" id="uncontrolled-tab-example">
+                            <Tab variant="pills" eventKey="all" title="All">
+                            { this.state.cardItemAll.length !== 0 ? 
+                                <Slots cardItem={this.state.cardItemAll} /> :
+                                <Message
+                                    warning
+                                    header='No slots available'
+                                    content='Please come back after some time.'
+                                />
+                            }
+                            </Tab>
+                            <Tab variant="pills" eventKey="above18" title="18-44">
+                                { this.state.cardItem18.length !== 0 ? 
+                                    <Slots cardItem={this.state.cardItem18} /> :
+                                    <Message
+                                        warning
+                                        header='No slots available'
+                                        content='Please come back after some time.'
+                                    />
+                                }
+                            </Tab>
+                            <Tab variant="pills" eventKey="above44" title="45+">
+                                { this.state.cardItem45.length !== 0 ? 
+                                    <Slots cardItem={this.state.cardItem45} /> :
+                                    <Message
+                                        warning
+                                        header='No slots available'
+                                        content='Please come back after some time.'
+                                    />
+                                }
+                            </Tab>
+                        </Tabs> 
+                    </div> : 
+                    this.state.flag == true?
+                    <Container>
+                        <Message
+                            warning
+                            header='No slots available'
+                            content='Please come back after some time.'
+                        /> 
+                    </Container> : '' 
+                }
             </div>
         );
     }
