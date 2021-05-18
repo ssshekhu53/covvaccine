@@ -87,7 +87,11 @@ class Homepage extends Component {
         e.preventDefault(); 
         this.setState({
             isSubmitting: true,
-            flag: false
+            flag: false,
+            slots: [],
+            cardItemAll: [],
+            cardItem18: [],
+            cardItem45: [],
         });
         if(this.state.state_id === null || this.state.district_id === null)
         {
@@ -104,7 +108,7 @@ class Homepage extends Component {
             });
             axios.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id=${this.state.district_id}&date=${moment(this.state.date).format('DD-MM-YYYY')}`)
             .then(response => {
-                console.log(response.data);
+                // console.log(response.data);
                 this.setState({
                     isSubmitting: false,
                     slots: response.data.sessions,
@@ -116,6 +120,7 @@ class Homepage extends Component {
                     cardItem18: this.state.slots.filter(item => parseInt(item.min_age_limit)===18),
                     cardItem45: this.state.slots.filter(item => parseInt(item.min_age_limit)===45),
                 });
+                // console.log(this.state.slots);
             })
             .catch(err => {
                 console.log(err);
@@ -177,7 +182,7 @@ class Homepage extends Component {
                 <hr/>
                 { this.state.cardItemAll.length !== 0 ?
                     <div className="container my-3 border border-2 border-secondary"> 
-                        <Tabs defaultActiveKey="all" className="d-flex justify-content-center font-weight-bold" id="uncontrolled-tab-example">
+                        <Tabs defaultActiveKey="all" className="d-flex justify-content-center font-weight-bold h4" id="uncontrolled-tab-example">
                             <Tab variant="pills" eventKey="all" title="All">
                             { this.state.cardItemAll.length !== 0 ? 
                                 <Slots cardItem={this.state.cardItemAll} /> :
