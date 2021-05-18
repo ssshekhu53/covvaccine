@@ -104,27 +104,17 @@ class Homepage extends Component {
             });
             axios.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id=${this.state.district_id}&date=${moment(this.state.date).format('DD-MM-YYYY')}`)
             .then(response => {
-                // console.log(response.data);
+                console.log(response.data);
                 this.setState({
                     isSubmitting: false,
                     slots: response.data.sessions,
                     flag: true
                 });
-                let cardItemAll = this.state.slots;
-                let cardItem18 = this.state.slotes.map((item, index) => {
-                    if(item.min_age_limit===18)
-                        return item;
-                });
-
-                let cardItem45 = this.state.slotes.map((item, index) => {
-                    if(item.min_age_limit===45)
-                        return item;
-                });
 
                 this.setState({
-                    cardItemAll: cardItemAll,
-                    cardItem18: cardItem18,
-                    cardItem45: cardItem45,
+                    cardItemAll: this.state.slots,
+                    cardItem18: this.state.slots.filter(item => parseInt(item.min_age_limit)===18),
+                    cardItem45: this.state.slots.filter(item => parseInt(item.min_age_limit)===45),
                 });
             })
             .catch(err => {
