@@ -24,6 +24,7 @@ class Homepage extends Component {
             district_id: null,
             slots: [],
             today: new Date(),
+            startDate: new Date(),
             isSubmitting: false,
             formError: false,
             cardItem: [],
@@ -196,7 +197,7 @@ class Homepage extends Component {
                             <Form.Field required>
                                 <label>Select District</label>
                                 <div className="customDatePickerWidth">
-                                    <DatePicker selected={this.state.today} minDate={this.state.today} onChange={this.onChangeDate} className="" />
+                                    <DatePicker selected={this.state.today} minDate={this.state.startDate} onChange={this.onChangeDate} className="" />
                                 </div>
                             </Form.Field>
                         </Form.Group>
