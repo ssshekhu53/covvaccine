@@ -1,33 +1,29 @@
 import React, { Component } from 'react';
 import { Tabs, Tab, Badge } from 'react-bootstrap';
-import { Dropdown, Container, Form, Button, Message } from 'semantic-ui-react';
+import { Container, Form, Button, Message } from 'semantic-ui-react';
 import DatePicker from "react-datepicker";
 import axios from 'axios';
 import moment from 'moment';
 import '../App.css';
 import Slots from '../components/slots.componts';
 
-class Homepage extends Component {
+class Pincode extends Component {
 
     constructor(props) {
         super(props);
 
-        this.onChangeState = this.onChangeState.bind(this);
-        this.onChangeDistrict = this.onChangeDistrict.bind(this);
+        this.onChangePincode = this.onChangePincode.bind(this);
         this.onChangeDate = this.onChangeDate.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
         // this.showCards = this.showCards.bind(this);
 
         this.state = {
-            stateOption: [],
-            districtOption: [],
-            state_id: null,
-            district_id: null,
+            pincode: null,
             slots: [],
-            today: new Date(),
-            startDate: new Date(),
             isSubmitting: false,
             formError: false,
+            today: new Date(),
+            startDate: new Date(),
             cardItemAll: [],
             cardItem18: [],
             cardItem45: [],
@@ -37,44 +33,13 @@ class Homepage extends Component {
     }
 
     componentDidMount() {
-        document.title = "Search By District | Covvaxine";
-
-        axios.get('https://cdn-api.co-vin.in/api/v2/admin/location/states')
-        .then(response => {
-            let stateOption = response.data.states.map(elem => Object({key: elem.state_id, text: elem.state_name, value: elem.state_id}));
-            this.setState({
-                stateOption: stateOption
-            });
-        })
-        .catch(err => {
-            console.log(err);
-        });
+        document.title = "Search By Pincode | Covvaxine";
     }
 
-    onChangeState(e, data) {
-        // console.log(data.value);
-        axios.get(`https://cdn-api.co-vin.in/api/v2/admin/location/districts/${data.value}`)
-        .then(response => {
-            this.setState({
-                state_id: data.value,
-                flag: false
-            });
-            let districtOption = response.data.districts.map(elem => Object({key: elem.district_id, text: elem.district_name, value: elem.district_id}));
-            this.setState({
-                districtOption: districtOption
-            });
-        })
-        .catch(err => {
-            console.log(err);
-        });
-    }
-
-    onChangeDistrict(e, data) {
-        // console.log(data.value);
+    onChangePincode(e) {
         this.setState({
-            district_id: data.value,
-            flag: false
-        });
+            pincode: e.target.value
+        })
     }
 
     onChangeDate(date) {
@@ -94,7 +59,7 @@ class Homepage extends Component {
             cardItem18: [],
             cardItem45: [],
         });
-        if(this.state.state_id === null || this.state.district_id === null)
+        if(this.state.pincode === null)
         {
             this.setState({
                 formError: true,
@@ -107,7 +72,7 @@ class Homepage extends Component {
             this.setState({
                 formError: false,
             });
-            axios.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id=${this.state.district_id}&date=${moment(this.state.date).format('DD-MM-YYYY')}`)
+            axios.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=${this.state.pincode}&date=${moment(this.state.date).format('DD-MM-YYYY')}`)
             .then(response => {
                 // console.log(response.data);
                 this.setState({
@@ -162,27 +127,13 @@ class Homepage extends Component {
                         }
                         <Form.Group widths='equal'>
                             <Form.Field required>
-                                <label>Select State</label>
-                                <Dropdown
-                                    placeholder='Select State'
-                                    fluid
-                                    selection
-                                    options={this.state.stateOption}
-                                    onChange={this.onChangeState}
+                                <Form.Input 
+                                    label='Pincode' 
+                                    placeholder='Enter Pincode' 
+                                    options={this.state.pincode}
+                                    onChange={this.onChangePincode}
                                     className=""
-                                    error={this.state.formError && this.state.state_id === null}
-                                />
-                            </Form.Field>
-                            <Form.Field required>
-                                <label>Select District</label>
-                                <Dropdown
-                                    placeholder='Select District'
-                                    fluid
-                                    selection
-                                    options={this.state.districtOption}
-                                    onChange={this.onChangeDistrict}
-                                    className=""
-                                    error={this.state.formError && this.state.district_id === null}
+                                    error={this.state.formError && this.state.pincode === null} 
                                 />
                             </Form.Field>
                             <Form.Field required>
@@ -192,7 +143,7 @@ class Homepage extends Component {
                                 </div>
                             </Form.Field>
                         </Form.Group>
-                        <Button primary type="submit" className="w-100">Search Slots</Button>
+                        <Form.Field className="text-center"><Button primary type="submit" className="">Search Slots</Button></Form.Field>
                     </Form>
                 </Container>
                 <hr/>
@@ -206,6 +157,7 @@ class Homepage extends Component {
                                     warning
                                     header='No slots available'
                                     content='Please come back after some time.'
+                                    className="mb-3"
                                 />
                             }
                             </Tab>
@@ -216,6 +168,7 @@ class Homepage extends Component {
                                         warning
                                         header='No slots available'
                                         content='Please come back after some time.'
+                                        className="mb-3"
                                     />
                                 }
                             </Tab>
@@ -226,6 +179,7 @@ class Homepage extends Component {
                                         warning
                                         header='No slots available'
                                         content='Please come back after some time.'
+                                        className="mb-3"
                                     />
                                 }
                             </Tab>
@@ -245,4 +199,4 @@ class Homepage extends Component {
     }
 }
 
-export default Homepage;
+export default Pincode;
