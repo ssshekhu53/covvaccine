@@ -143,7 +143,7 @@ class Pincode extends Component {
                                 </div>
                             </Form.Field>
                         </Form.Group>
-                        <Form.Field className="text-center"><Button primary type="submit" className="">Search Slots</Button></Form.Field>
+                        <Form.Field className="text-center"><Button color="purple" type="submit" className="">Search Slots</Button></Form.Field>
                     </Form>
                 </Container>
                 <hr/>

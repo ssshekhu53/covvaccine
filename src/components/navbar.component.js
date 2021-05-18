@@ -6,13 +6,22 @@ class TopNavigation extends Component {
     render()
     {
         return(
-            <Navbar bg="dark" variant="dark" expand="lg">
-                <Navbar.Brand href="/">Covvaxine</Navbar.Brand>
+            <Navbar bg="success" variant="dark" expand="lg">
+                <Navbar.Brand href="/" className="font-weight-bold d-flex align-items-center">
+                    <img
+                        src="/syringe.png"
+                        width="30"
+                        height="30"
+                        className="d-inline-block align-top mr-2"
+                        alt="Covvaxine logo"
+                    />
+                    Covvaxine
+                </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
-                        <Nav.Link href="/">Home</Nav.Link>
-                        <Nav.Link href="/pincode-search">Pincode</Nav.Link>
+                        <Nav.Link href="/" >Home</Nav.Link>
+                        <Nav.Link href="/pincode-search" >Pincode</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>

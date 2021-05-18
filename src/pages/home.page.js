@@ -192,7 +192,7 @@ class Homepage extends Component {
                                 </div>
                             </Form.Field>
                         </Form.Group>
-                        <Button primary type="submit" className="w-100">Search Slots</Button>
+                        <Form.Field className="text-center"><Button color="purple" type="submit" className="">Search Slots</Button></Form.Field>
                     </Form>
                 </Container>
                 <hr/>
