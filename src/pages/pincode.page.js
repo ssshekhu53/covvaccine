@@ -146,7 +146,7 @@ class Pincode extends Component {
                         <Form.Field className="text-center"><Button color="purple" type="submit" className="">Search Slots</Button></Form.Field>
                     </Form>
                 </Container>
-                <hr/>
+                <hr className="mb-5" />
                 { this.state.cardItemAll.length !== 0 ?
                     <div className="container my-3 border border-2 border-secondary"> 
                         <Tabs defaultActiveKey="all" className="d-flex justify-content-center font-weight-bold h4" id="uncontrolled-tab-example">

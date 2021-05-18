@@ -14,6 +14,9 @@ function App() {
 				<Route path="/pincode-search" exact component={Pincode} />
 			</Switch>
 		</Router>
+		<div class="footer">
+            <div className="font-weight-bolder">Made with <span className="text-danger" style={{fontSize: "25px"}}>&hearts;</span> by <a href="https://www.stackshekhu.cf/" target="_blank">SoloSheku</a></div>
+        </div>
 	</div>
   );
 }
