@@ -4,11 +4,13 @@ import Homepage from "./pages/home.page";
 
 function App() {
   return (
-    <Router>
-		<TopNavigation />
-		<br/>
-		<Route path="/" exact component={Homepage} />
-	</Router>
+	<div className="bg-light" style={{height: "100vh"}}>
+		<Router>
+			<TopNavigation />
+			<br/>
+			<Route path="/" exact component={Homepage} />
+		</Router>
+	</div>
   );
 }
 

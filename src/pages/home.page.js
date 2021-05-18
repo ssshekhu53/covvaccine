@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-// import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
-import { Dropdown, Container, Form, Button, Message, Card, CardDescription } from 'semantic-ui-react';
+import { ListGroup, Badge } from 'react-bootstrap';
+import { Dropdown, Container, Form, Button, Message, Card } from 'semantic-ui-react';
 import DatePicker from "react-datepicker";
 import axios from 'axios';
 import moment from 'moment';
@@ -107,20 +107,11 @@ class Homepage extends Component {
                     slots: response.data.sessions,
                     flag: true
                 });
-                let cardItem = this.state.slots.map((ele, index) => {
-                    return Object({
-                        'header': ele.name,
-                        'description': [`Age Limit: ${ele.min_age_limit}+`, `Vaccine: ${ele.vaccine}`].join('\n'),
-                        'meta': ele.address,
-                        'color': 'red'
-                    })
-                })
+                let cardItem = this.state.slots;
 
                 this.setState({
                     cardItem: cardItem
                 });
-
-                console.log(this.state.cardItem);
             })
             .catch(err => {
                 console.log(err);
@@ -133,23 +124,36 @@ class Homepage extends Component {
 
     showCards() {
         let cards = [];
-        this.state.slots.forEach((ele, index)=>{
+        this.state.cardItem.forEach((ele, index) => {
+            let timeSlots = [];
+            ele.slots.forEach((item, index) => {
+                timeSlots.push(<ListGroup.Item key={index} variant={index%2===0?'warning':'light'} className="text-center font-weight-bold">{item}</ListGroup.Item>);
+            });
             cards.push(
-            <Card color="violet">
+            <Card color="violet" key={index}>
                 <Card.Content>
                     <Card.Header>{ele.name}</Card.Header>
                     <Card.Meta>
-                        <span className='date'>{ele.address}, {ele.pincode}</span>
+                        <span className='date'>
+                            {ele.address}, {ele.pincode} <br/> 
+                            <Badge variant="info">Dose 1 : {ele.available_capacity_dose1} Doses</Badge>
+                            <Badge variant="info">Dose 2 : {ele.available_capacity_dose2} Doses</Badge>
+                            <Badge variant="info">Total : {ele.available_capacity} Doses</Badge>
+                        </span>
                     </Card.Meta>
+                    <hr/>
                     <Card.Description>
+                        <ListGroup>
+                            {timeSlots}
+                        </ListGroup>
                     </Card.Description>
                 </Card.Content>
-                <Card.Content extra>
-                    <div className='ui three buttons'>
-                        <Button basic color="red">{ele.min_age_limit}+</Button>
-                        <Button basic color="green">{ele.vaccine}</Button>
-                        <Button basic color="blue"><span>{ele.fee_type}</span></Button>
-                    </div>
+                <Card.Content extra className="d-flex justify-content-center">
+                    <ListGroup horizontal>
+                        <ListGroup.Item className="text-danger border-danger">{ele.min_age_limit}+</ListGroup.Item>
+                        <ListGroup.Item className="text-success border-success">{ele.vaccine}</ListGroup.Item>
+                        <ListGroup.Item className="text-primary border-primary">{ele.fee_type}</ListGroup.Item>
+                    </ListGroup>
                 </Card.Content>
             </Card>);
         })
@@ -159,7 +163,7 @@ class Homepage extends Component {
     render()
     {
         return(
-            <div>
+            <div className="container-fluid">
                 <Container>
                     <Form loading={this.state.isSubmitting} error={this.state.formError} onSubmit={this.onSubmit}>
                         { this.state.formError === true?
@@ -204,7 +208,7 @@ class Homepage extends Component {
                         <Button primary type="submit" className="w-100">Search Slots</Button>
                     </Form>
                 </Container>
-                <Container className="py-3">
+                <div className="container-fluid py-3">
                     {/* { this.state.slots.length !== 0 ? (<Accordion panels={rootPanels(this.state.slots)} styled />): '' } */}
                     { this.state.cardItem.length !== 0 ? 
                         (<Card.Group centered>
@@ -215,7 +219,7 @@ class Homepage extends Component {
                                 header='No slots available'
                                 content='Please come back after some time.'
                             />:'' }
-                </Container>
+                </div>
             </div>
         );
     }
