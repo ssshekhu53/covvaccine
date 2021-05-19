@@ -6,7 +6,7 @@ class TopNavigation extends Component {
     render()
     {
         return(
-            <Navbar bg="success" variant="dark" expand="lg">
+            <Navbar bg="success" variant="dark" expand="lg" fixed="top">
                 <Navbar.Brand href="/" className="font-weight-bold d-flex align-items-center">
                     <img
                         src="/syringe.png"

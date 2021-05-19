@@ -5,7 +5,7 @@ import Pincode from "./pages/pincode.page";
 
 function App() {
   return (
-	<div className="bg-light" style={{minHeight: "100vh"}}>
+	<div className="bg-light pb-5" style={{minHeight: "100vh"}}>
 		<Router>
 			<TopNavigation />
 			<br/>

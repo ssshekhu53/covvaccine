@@ -90,13 +90,13 @@ class Pincode extends Component {
 
                 let tabs = [];
                 tabs.push(
-                    <span>All <Badge variant="warning" className="font-weight-normal">{this.state.cardItemAll.length}</Badge></span>
+                    <span>All {' '}<Badge variant="warning" className="font-weight-normal">{this.state.cardItemAll.length}</Badge></span>
                 )
                 tabs.push(
-                    <span>18-44 <Badge variant="warning" className="font-weight-normal">{this.state.cardItem18.length}</Badge></span>
+                    <span>18-44 {' '}<Badge variant="warning" className="font-weight-normal">{this.state.cardItem18.length}</Badge></span>
                 )
                 tabs.push(
-                    <span>45 <Badge variant="warning" className="font-weight-normal">{this.state.cardItem45.length}</Badge></span>
+                    <span>45+ {' '}<Badge variant="warning" className="font-weight-normal">{this.state.cardItem45.length}</Badge></span>
                 )
 
                 this.setState({
@@ -115,9 +115,9 @@ class Pincode extends Component {
     render()
     {
         return(
-            <div className="container-fluid">
+            <div className="container-fluid mt-5 pt-3">
                 <Container>
-                    <Form loading={this.state.isSubmitting} error={this.state.formError} onSubmit={this.onSubmit}>
+                    <Form loading={this.state.isSubmitting} error={this.state.formError} onSubmit={this.onSubmit} className="">
                         { this.state.formError === true?
                             <Message
                                 error
@@ -148,7 +148,7 @@ class Pincode extends Component {
                 </Container>
                 <hr className="mb-5" />
                 { this.state.cardItemAll.length !== 0 ?
-                    <div className="container my-3 border border-2 border-secondary"> 
+                    <div className="container mt-3 pt-2 border border-2 border-secondary"> 
                         <Tabs defaultActiveKey="all" className="d-flex justify-content-center font-weight-bold h4" id="uncontrolled-tab-example">
                             <Tab variant="pills" eventKey="all" title={this.state.tabs[0]}>
                             { this.state.cardItemAll.length !== 0 ? 
@@ -157,7 +157,7 @@ class Pincode extends Component {
                                     warning
                                     header='No slots available'
                                     content='Please come back after some time.'
-                                    className="mb-3"
+                                    className="my-3"
                                 />
                             }
                             </Tab>
@@ -168,7 +168,7 @@ class Pincode extends Component {
                                         warning
                                         header='No slots available'
                                         content='Please come back after some time.'
-                                        className="mb-3"
+                                        className="my-3"
                                     />
                                 }
                             </Tab>
@@ -179,7 +179,7 @@ class Pincode extends Component {
                                         warning
                                         header='No slots available'
                                         content='Please come back after some time.'
-                                        className="mb-3"
+                                        className="my-3"
                                     />
                                 }
                             </Tab>
@@ -191,6 +191,7 @@ class Pincode extends Component {
                             warning
                             header='No slots available'
                             content='Please come back after some time.'
+                            className="mb-3"
                         /> 
                     </Container> : '' 
                 }
