@@ -17,7 +17,7 @@ class TopNavigation extends Component {
                     />
                     Covvaxine
                 </Navbar.Brand>
-                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Toggle aria-controls="basic-navbar-nav" className="border" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
                         <Nav.Link href="/" >District Search</Nav.Link>

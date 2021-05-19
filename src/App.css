@@ -19,3 +19,11 @@
    font-weight: bolder;
    text-decoration: none;
 }
+
+nav.bg-success {
+   background-image: linear-gradient(to right, #28a745, #49b23f, #66bd38, #81c830, #9cd226);
+}
+
+#root .bg-light {
+   background-image: linear-gradient(to right bottom, #f8f9fa, #f5f6f8, #f1f4f7, #eef1f5, #eaeff3);
+}
