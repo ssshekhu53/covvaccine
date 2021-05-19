@@ -24,7 +24,7 @@ class Homepage extends Component {
             state_id: null,
             district_id: null,
             slots: [],
-            today: new Date(),
+            date: new Date(),
             startDate: new Date(),
             isSubmitting: false,
             formError: false,
@@ -79,7 +79,7 @@ class Homepage extends Component {
 
     onChangeDate(date) {
         this.setState({
-            today: date,
+            date: date,
             flag: false
         });
     }
@@ -109,6 +109,7 @@ class Homepage extends Component {
             });
             axios.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id=${this.state.district_id}&date=${moment(this.state.date).format('DD-MM-YYYY')}`)
             .then(response => {
+                // console.log(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id=${this.state.district_id}&date=${moment(this.state.date).format('DD-MM-YYYY')}`);
                 // console.log(response.data);
                 this.setState({
                     isSubmitting: false,
@@ -136,7 +137,6 @@ class Homepage extends Component {
                 this.setState({
                     tabs: tabs
                 });
-                // console.log(this.state.slots);
             })
             .catch(err => {
                 console.log(err);
@@ -188,7 +188,7 @@ class Homepage extends Component {
                             <Form.Field required>
                                 <label>Select Date</label>
                                 <div className="customDatePickerWidth">
-                                    <DatePicker selected={this.state.today} minDate={this.state.startDate} onChange={this.onChangeDate} className="" />
+                                    <DatePicker selected={this.state.date} minDate={this.state.startDate} onChange={this.onChangeDate} className="" />
                                 </div>
                             </Form.Field>
                         </Form.Group>

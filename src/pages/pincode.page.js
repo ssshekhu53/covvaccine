@@ -22,7 +22,7 @@ class Pincode extends Component {
             slots: [],
             isSubmitting: false,
             formError: false,
-            today: new Date(),
+            date: new Date(),
             startDate: new Date(),
             cardItemAll: [],
             cardItem18: [],
@@ -44,7 +44,7 @@ class Pincode extends Component {
 
     onChangeDate(date) {
         this.setState({
-            today: date,
+            date: date,
             flag: false
         });
     }
@@ -74,6 +74,7 @@ class Pincode extends Component {
             });
             axios.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=${this.state.pincode}&date=${moment(this.state.date).format('DD-MM-YYYY')}`)
             .then(response => {
+                // console.log(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=${this.state.pincode}&date=${moment(this.state.date).format('DD-MM-YYYY')}`);
                 // console.log(response.data);
                 this.setState({
                     isSubmitting: false,
@@ -101,7 +102,6 @@ class Pincode extends Component {
                 this.setState({
                     tabs: tabs
                 });
-                // console.log(this.state.slots);
             })
             .catch(err => {
                 console.log(err);
@@ -139,7 +139,7 @@ class Pincode extends Component {
                             <Form.Field required>
                                 <label>Select Date</label>
                                 <div className="customDatePickerWidth">
-                                    <DatePicker selected={this.state.today} minDate={this.state.startDate} onChange={this.onChangeDate} className="" />
+                                    <DatePicker selected={this.state.date} minDate={this.state.startDate} onChange={this.onChangeDate} className="" />
                                 </div>
                             </Form.Field>
                         </Form.Group>
