@@ -206,6 +206,7 @@ class Homepage extends Component {
                                     warning
                                     header='No slots available'
                                     content='Please come back after some time.'
+                                    className="my-3"
                                 />
                             }
                             </Tab>
@@ -216,6 +217,7 @@ class Homepage extends Component {
                                         warning
                                         header='No slots available'
                                         content='Please come back after some time.'
+                                        className="my-3"
                                     />
                                 }
                             </Tab>
@@ -226,6 +228,7 @@ class Homepage extends Component {
                                         warning
                                         header='No slots available'
                                         content='Please come back after some time.'
+                                        className="my-3"
                                     />
                                 }
                             </Tab>
